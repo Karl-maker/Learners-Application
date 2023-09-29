@@ -66,6 +66,8 @@ interface WidgetWrapperProps {
     innerBackgroundColor?: string;
     outerBackgroundColor?: string;
     outerPadding?: string;
+    widgetClassName?: string;
+    containerClassName?: string;
     loading?: boolean;
 }
 
@@ -78,6 +80,8 @@ const WidgetWrapper: React.FC<WidgetWrapperProps> = ({
     outerPadding = '5px',
     innerBackgroundColor = 'transparent',
     outerBackgroundColor = 'transparent',
+    widgetClassName = "",
+    containerClassName = "",
     loading = false
  }: WidgetWrapperProps) => {
     return <>
@@ -85,13 +89,14 @@ const WidgetWrapper: React.FC<WidgetWrapperProps> = ({
             <OuterWidget 
             outerPadding={outerPadding}
             outerBackgroundColor={outerBackgroundColor}
+            className={containerClassName}
             >
                 <Widget 
                     innerBorderRadius={outerBorderRadius}
                     innerBorderWidth={outerBorderWidth}
                     innerBorderColor={outerBorderColor}
                     innerPadding={innerPadding}
-                    innerBackgroundColor={innerBackgroundColor}
+                    className={widgetClassName}
                 >
                     {children}
                 </Widget>

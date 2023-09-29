@@ -1,11 +1,21 @@
+body {
+    height: 100vh; /* Use 100vh to set the body height to 100% of the viewport height */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+}
+
 body.dark-mode {
     color: #fff;
     background: #363537;
 }
+
+.widget-container {
+    padding: 50px;
+}
   
 body.light-mode {
     color: #363537;
-    background: #fafafa;
+    background: #f5f6fa;
 }
 
 body.dark-mode .skeleton {
@@ -15,3 +25,4 @@ body.dark-mode .skeleton {
 body.light-mode .skeleton {
     background: #b2bec3;
 }
+
