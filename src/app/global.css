@@ -1,0 +1,17 @@
+body.dark-mode {
+    color: #fff;
+    background: #363537;
+}
+  
+body.light-mode {
+    color: #363537;
+    background: #fafafa;
+}
+
+body.dark-mode .skeleton {
+    background: #b2bec3;
+}
+
+body.light-mode .skeleton {
+    background: #b2bec3;
+}
