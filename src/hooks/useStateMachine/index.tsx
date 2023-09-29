@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type StateConfig = {
+export type StateConfig = {
     initial: string;
     states: Record<string, { on: Record<string, string> }>;
 };

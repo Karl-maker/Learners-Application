@@ -57,6 +57,7 @@ const useStateManager = (initialState: object = {}) => {
         state,
         loading,
         error,
+        setState,
         action,
         set, 
         get
