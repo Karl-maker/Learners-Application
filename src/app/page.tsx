@@ -50,7 +50,6 @@ const homePageStateConfig  = {
 };
 
 /**
- * @TODO add success state
  * @see https://dribbble.com/shots/16499341-Landing-Page-Hero-Section
  * @param props 
  * @returns 
