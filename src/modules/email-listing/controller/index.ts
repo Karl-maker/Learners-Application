@@ -11,7 +11,7 @@ const addToEmailList = async (email: string = ''): Promise<Response> => {
             rej({
                 message: "Added to email list",
             })
-        }, 500)
+        }, 3000)
     })
 }
 

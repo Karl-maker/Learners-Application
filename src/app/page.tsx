@@ -1,5 +1,6 @@
 "use client"
 
+import InputWithButton from "@/components/input/input-with-button";
 import WidgetComponent from "@/components/layout/widget";
 import { useScreenSize } from "@/context/screen/provider";
 import { useDarkModeContext } from "@/context/theme/provider";
@@ -8,6 +9,7 @@ import useStateManager from "@/hooks/useStateManager";
 import emailListController from "@/modules/email-listing/controller";
 import { isValidEmail } from "@/utils/validation";
 import { useEffect } from "react";
+import { Rings } from 'react-loader-spinner';
 
 interface IHomePage {
     email: string;
@@ -47,6 +49,13 @@ const homePageStateConfig  = {
     }
 };
 
+/**
+ * @TODO add success state
+ * @see https://dribbble.com/shots/16499341-Landing-Page-Hero-Section
+ * @param props 
+ * @returns 
+ */
+
 const HomePageDesktopView = (props: IHomePage) => {
 
     const {
@@ -65,7 +74,8 @@ const HomePageDesktopView = (props: IHomePage) => {
       //flexDirection: 'column',
       alignItems: 'center', // Center items horizontally
       justifyContent: 'center', // Center items vertically
-      height: '100vh' // 100% of the viewport height
+      height: '100vh', // 100% of the viewport height
+      backgroundColor: 'red'
     };
   
     const formStyle = {
@@ -109,28 +119,53 @@ const HomePageDesktopView = (props: IHomePage) => {
                 <div style={labelStyle}>
                   Enter In Your Email To Recieve More Info
                 </div>
-                <input
-                  style={inputStyle}
+                <InputWithButton
                   type="email"
-                  name="email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
                   placeholder="Enter your email"
-                  required
-                  onFocus={onFocus}
-                  disabled={disableInput}
-                />
-              </div>
-              <div style={formGroupStyle} className="form-group">
-                <button
-                  style={buttonStyle}
+                  disableInput={disableInput}
+                  disableButton={disableSubmit}
                   onClick={onSubmit}
-                  disabled={disableSubmit}
-                >
-                  {loading ? 'Loading' : 'Submit'}
-                </button>
+                  loading={loading}
+                  onFocus={onFocus}
+                  inputStyle={{
+                    width: '100%',
+                    fontSize: '18px'
+                  }}
+                  buttonStyle={{
+                    width: '120px',
+                    height: '60px',
+                    fontSize: '20px',
+                    transition: '0.5s',
+                    backgroundColor: !validEmail ? 'grey' : '#16a085'
+                  }}
+                  containerStyle={{
+                    height: '60px',
+                    width: '400px',
+                    borderRadius: '60px'
+                  }}
+                  Icon={<>
+
+                  </>}
+                  SuccessComponent = {
+                    <></>
+                  }
+                  LoadComponent={
+                    <Rings
+                        height="70"
+                        width="70"
+                        color="#ffff"
+                        radius="6"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                        ariaLabel="rings-loading"
+                    />
+                  }
+                 />
               </div>
           </div>
         </WidgetComponent.Widget>

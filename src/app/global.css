@@ -26,3 +26,7 @@ body.light-mode .skeleton {
     background: #b2bec3;
 }
 
+input:focus {
+    outline:none; 
+}
+
