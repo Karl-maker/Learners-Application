@@ -1,12 +1,11 @@
 "use client"
 
-import SplitScreen from "@/components/layout/split-screen";
 import WidgetComponent from "@/components/layout/widget";
 import { useScreenSize } from "@/context/screen/provider";
 import { useDarkModeContext } from "@/context/theme/provider";
 import useStateMachine from "@/hooks/useStateMachine";
 import useStateManager from "@/hooks/useStateManager";
-import { addToEmailList } from "@/modules/email-listing/controller";
+import emailListController from "@/modules/email-listing/controller";
 import { isValidEmail } from "@/utils/validation";
 import { useEffect } from "react";
 
@@ -18,13 +17,42 @@ interface IHomePage {
     disableInput: boolean;
     disableSubmit: boolean;
     loading: boolean;
+    validEmail: boolean;
 }
+
+const homePageStateConfig  = {
+    initial: 'idle',
+    states: {
+        idle: { 
+            on: { 
+                ENTER_INFO: 'filling_out_form' 
+            } 
+        },
+        filling_out_form: {
+            on: {
+                SUBMIT: 'processing_form'
+            }
+        },
+        processing_form: {
+            on: {
+                ERROR_OCCURED: 'filling_out_form',
+                INFORMATION_SUBMITTED: 'form_complete'
+            }
+        },
+        form_complete: {
+            on: {
+                RESET: 'idle'
+            }
+        }
+    }
+};
 
 const HomePageDesktopView = (props: IHomePage) => {
 
     const {
         email, 
         setEmail,
+        validEmail,
         onFocus,
         onSubmit,
         disableInput,
@@ -58,6 +86,7 @@ const HomePageDesktopView = (props: IHomePage) => {
       border: '1px solid #ccc',
       borderRadius: '5px',
       fontSize: '16px',
+      borderColor: validEmail ? 'grey' : 'red'
     };
   
     const buttonStyle = {
@@ -74,19 +103,20 @@ const HomePageDesktopView = (props: IHomePage) => {
     return (
       <div style={containerStyle}>
         {/* Container For background */}
-        <WidgetComponent.Widget innerBackgroundColor="#dfe4ea">
+        <WidgetComponent.Widget>
           <div style={formStyle}>
               <div style={formGroupStyle} className="form-group">
-                <label style={labelStyle} htmlFor="email">
-                  Email:
-                </label>
+                <div style={labelStyle}>
+                  Enter In Your Email To Recieve More Info
+                </div>
                 <input
                   style={inputStyle}
                   type="email"
-                  id="email"
                   name="email"
                   value={email}
-                  onChange={setEmail}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   placeholder="Enter your email"
                   required
                   onFocus={onFocus}
@@ -108,96 +138,41 @@ const HomePageDesktopView = (props: IHomePage) => {
     );
 };
 
-const HomePageTabletView = () => {
-    return (
-      <SplitScreen firstWeight={1.5}>
-        <SplitScreen horizontal={true}>
-            <WidgetComponent.Widget>
+const HomePageTabletView = HomePageDesktopView;
 
-            </WidgetComponent.Widget>
-            <SplitScreen>
-            <WidgetComponent.Widget>
-
-            </WidgetComponent.Widget>
-            <WidgetComponent.Widget>
-
-            </WidgetComponent.Widget>
-            </SplitScreen>
-        </SplitScreen>
-        <WidgetComponent.Widget>
-
-        </WidgetComponent.Widget>
-      </SplitScreen>
-    );
-};
-
-const HomePageMobileView = () => {
-    return <>
-        <WidgetComponent.Widget>
-        
-        </WidgetComponent.Widget>
-        <SplitScreen>
-            <WidgetComponent.Widget>
-
-            </WidgetComponent.Widget>
-            <WidgetComponent.Widget>
-
-            </WidgetComponent.Widget>
-        </SplitScreen>
-    </>
-};
+const HomePageMobileView = HomePageDesktopView;
 
 export default function Home() {
 
-    const homePageStateConfig = {
-        initial: 'idle',
-        states: {
-            idle: { 
-                on: { 
-                    ENTER_INFO: 'filling_out_form' 
-                } 
-            },
-            filling_out_form: {
-                on: {
-                    SUBMIT: 'processing_form'
-                }
-            },
-            processing_form: {
-                on: {
-                    ERROR_OCCURED: 'filling_out_form',
-                    INFORMATION_SUBMITTED: 'form_complete'
-                }
-            },
-            form_complete: {
-                on: {
-                    RESET: 'idle'
-                }
-            }
-        }
-    };
-    
     const { screenSize } = useScreenSize();
     const darkMode = useDarkModeContext();
-
     const homePageState = useStateMachine(homePageStateConfig);
     const form = useStateManager({
         email: "",
         is_email_valid: false
     });
 
-    const onFormFocus = () => {
+    const handleFormFocus = () => {
         homePageState.transition('ENTER_INFO');
     }
 
-    const handleEmailInput = (e) => {
+    const handleFormProcessing = async () => {
+        try{
+            const { message } = await emailListController.addToEmailList(form.get().email);
+            homePageState.transition('INFORMATION_SUBMITTED');
+        } catch({ message }) {
+            homePageState.transition('ERROR_OCCURED');
+        }
+    }
 
+    const handleEmailInput = (value: string) => {
         form.action((state: any, input: any) => {
             return {
                 ...state,
                 email: input,
                 is_email_valid: isValidEmail(input).is_valid
             }
-        }, e.target.value);
+        }, value);
     }
 
     const handleSubmitEmail = () => {
@@ -210,42 +185,43 @@ export default function Home() {
         (async () => {
             switch (homePageState.state) {
                 case "idle":
-                    console.log('idle')
-                break;
+                    break;
                 
                 case "filling_out_form":
-                    console.log('filling_out_form')
-                break;
+                    break;
 
                 case "processing_form":
-                    const { message, error } = await addToEmailList(form.get().email);
-                    if(!error) {
-                        homePageState.transition('INFORMATION_SUBMITTED');
-                        return;
-                    }
-                    homePageState.transition('ERROR_OCCURED');
-                break;
+                    handleFormProcessing();
+                    break;
 
                 case "form_complete":
-                    console.log('form_complete')
-                break;
+                    break;
             }
         })();
     }, [homePageState.state]);
 
+    const homeProps = {
+        email: form.get().email,
+        setEmail: handleEmailInput,
+        validEmail: form.get().is_email_valid,
+        onFocus: handleFormFocus,
+        onSubmit: handleSubmitEmail,
+        disableInput: homePageState.state === 'processing_form' || homePageState.state === 'form_complete',
+        disableSubmit: homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().is_email_valid,
+        loading: homePageState.state === 'processing_form'
+    }
+
     const HomeComponents = {
         Banner: {
             desktop: <HomePageDesktopView 
-                        email={form.get().email} 
-                        setEmail={handleEmailInput}
-                        onFocus={onFormFocus}
-                        onSubmit={handleSubmitEmail}
-                        disableInput={homePageState.state === 'processing_form' || homePageState.state === 'form_complete'}
-                        disableSubmit={homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().is_email_valid}
-                        loading={homePageState.state === 'processing_form'}
+                        {...homeProps}
                     />,
-            tablet: <HomePageTabletView/>,
-            mobile: <HomePageMobileView/>
+            tablet: <HomePageTabletView
+                        {...homeProps}
+                    />,
+            mobile: <HomePageMobileView
+                        {...homeProps}
+                    />
         }
     };
 

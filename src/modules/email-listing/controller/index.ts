@@ -5,12 +5,16 @@ import { Response } from "@/modules/interfaces"
  * @param email 
  */
 
-export const addToEmailList = async (email: string = ''): Promise<Response> => {
+const addToEmailList = async (email: string = ''): Promise<Response> => {
     return new Promise((res, rej) => {
         setTimeout(()=> {
-            res({
+            rej({
                 message: "Added to email list",
             })
         }, 500)
     })
+}
+
+export default {
+    addToEmailList
 }
