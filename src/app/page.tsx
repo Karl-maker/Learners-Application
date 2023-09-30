@@ -149,7 +149,7 @@ export default function Home() {
     const homePageState = useStateMachine(homePageStateConfig);
     const form = useStateManager({
         email: "",
-        is_email_valid: false
+        isEmailValid: false
     });
 
     const handleFormFocus = () => {
@@ -170,13 +170,13 @@ export default function Home() {
             return {
                 ...state,
                 email: input,
-                is_email_valid: isValidEmail(input).is_valid
+                isEmailValid: isValidEmail(input).is_valid
             }
         }, value);
     }
 
     const handleSubmitEmail = () => {
-        if(form.get().is_email_valid) {
+        if(form.get().isEmailValid) {
             homePageState.transition('SUBMIT');
         }
     }
@@ -203,11 +203,11 @@ export default function Home() {
     const homeProps = {
         email: form.get().email,
         setEmail: handleEmailInput,
-        validEmail: form.get().is_email_valid,
+        validEmail: form.get().isEmailValid,
         onFocus: handleFormFocus,
         onSubmit: handleSubmitEmail,
         disableInput: homePageState.state === 'processing_form' || homePageState.state === 'form_complete',
-        disableSubmit: homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().is_email_valid,
+        disableSubmit: homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().isEmailValid,
         loading: homePageState.state === 'processing_form'
     }
 
