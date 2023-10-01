@@ -13,6 +13,7 @@ import { Rings } from 'react-loader-spinner';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { HiOutlineMail } from 'react-icons/hi';
 import { useTranslations } from 'next-intl';
+import SplitScreen from "@/components/layout/split-screen";
 
 interface IHomePage {
     email: string;
@@ -26,6 +27,8 @@ interface IHomePage {
     ButtonComponent: ReactNode;
     Icon: ReactNode;
     placeholder: string;
+    headerMessage: string;
+    statusMessage: string;
 };
 
 const homePageStateConfig  = {
@@ -73,24 +76,38 @@ const HomePageDesktopView = (props: IHomePage) => {
         disableSubmit,
         ButtonComponent,
         placeholder,
-        Icon
+        Icon,
+        headerMessage,
+        statusMessage
     } = props;
 
     const containerStyle = {
-      display: 'flex',
-      alignItems: 'center', 
-      justifyContent: 'center', 
       height: '100vh', 
-      paddingTop: '200px',
-      backgroundColor: 'grey'
+      backgroundColor: '#1dd1a1'
     };
+
+    const statusStyle = {
+        color: '#ffff',
+        backgroundColor: "#10ac84",
+        display: 'inline-block',
+        borderRadius: '16px',
+        padding: '8px 16px',
+        fontSize: '14px',
+        fontWeight: 'bold',
+    }
  
     return (
       <div style={containerStyle}>
         {/* Container For background */}
+        <SplitScreen>
         <WidgetComponent.Widget>
           <div>
-              <div>
+            <div style={statusStyle}>
+                {statusMessage}
+            </div>
+            <h1>
+                { headerMessage }
+            </h1>
                 <InputWithButton
                   type="email"
                   value={email}
@@ -117,7 +134,7 @@ const HomePageDesktopView = (props: IHomePage) => {
                   }}
                   containerStyle={{
                     height: '60px',
-                    width: '600px',
+                    width: '500px',
                     borderRadius: '20px'
                   }}
                   ButtonComponent={
@@ -125,9 +142,14 @@ const HomePageDesktopView = (props: IHomePage) => {
                   }
                   Icon={Icon}
                  />
-              </div>
           </div>
         </WidgetComponent.Widget>
+        <div>
+            {
+                //@desc add relevant art 
+            }
+        </div>
+        </SplitScreen>
       </div>
     );
 };
@@ -225,6 +247,8 @@ export default function Home() {
         loading: homePageState.state === 'processing_form',
         ButtonComponent: buttonDisplay[homePageState.state],
         placeholder: t('enter_email_for_newsletter'),
+        headerMessage: t('start_with_newsletter'),
+        statusMessage: t('coming_soon'),
         Icon: <div style={{
                 marginLeft: '10px',
                 marginRight: '10px'
