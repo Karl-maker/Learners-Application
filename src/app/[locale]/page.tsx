@@ -12,6 +12,7 @@ import { ReactNode, useEffect } from "react";
 import { Rings } from 'react-loader-spinner';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { HiOutlineMail } from 'react-icons/hi';
+import { useTranslations } from 'next-intl';
 
 interface IHomePage {
     email: string;
@@ -24,6 +25,7 @@ interface IHomePage {
     validEmail: boolean;
     ButtonComponent: ReactNode;
     Icon: ReactNode;
+    placeholder: string;
 };
 
 const homePageStateConfig  = {
@@ -70,6 +72,7 @@ const HomePageDesktopView = (props: IHomePage) => {
         disableInput,
         disableSubmit,
         ButtonComponent,
+        placeholder,
         Icon
     } = props;
 
@@ -94,7 +97,7 @@ const HomePageDesktopView = (props: IHomePage) => {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
-                  placeholder="Enter your email"
+                  placeholder={placeholder}
                   disableInput={disableInput}
                   disableButton={disableSubmit}
                   onClick={onSubmit}
@@ -136,6 +139,7 @@ const HomePageMobileView = HomePageDesktopView;
 export default function Home() {
 
     const { screenSize } = useScreenSize();
+    const t = useTranslations();
     const darkMode = useDarkModeContext();
     const homePageState = useStateMachine(homePageStateConfig);
     const form = useStateManager({
@@ -206,8 +210,8 @@ export default function Home() {
             size={40}
             color="white"
         />,
-        filling_out_form: <>Submit</>,
-        idle: <>Submit</>
+        filling_out_form: <>{t('submit')}</>,
+        idle: <>{t('submit')}</>
     }
 
     const homeProps = {
@@ -220,6 +224,7 @@ export default function Home() {
         disableSubmit: homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().isEmailValid,
         loading: homePageState.state === 'processing_form',
         ButtonComponent: buttonDisplay[homePageState.state],
+        placeholder: t('enter_email_for_newsletter'),
         Icon: <div style={{
                 marginLeft: '10px',
                 marginRight: '10px'
