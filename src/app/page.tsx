@@ -24,7 +24,7 @@ interface IHomePage {
     validEmail: boolean;
     ButtonComponent: ReactNode;
     Icon: ReactNode;
-}
+};
 
 const homePageStateConfig  = {
     initial: 'idle',
@@ -243,7 +243,7 @@ export default function Home() {
                         {...homeProps}
                     />
         }
-    };
+    }
 
     return (
         <div className={`${darkMode.value ? 'dark-mode' : 'light-mode'}`}>

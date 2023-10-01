@@ -19,11 +19,6 @@ interface IPropsInputWithButton {
     ButtonComponent?: ReactNode;
 }
 
-/**
- * @TODO add statemachines or state handling for success, typing etc to keep it a controlled compone...
- * @TODO Icon Support
- */
-
 const InputWithButton = ({ 
     containerStyle = {}, 
     type = 'text',
