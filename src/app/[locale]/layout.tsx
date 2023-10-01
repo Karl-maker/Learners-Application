@@ -8,6 +8,11 @@ export function generateStaticParams() {
   return [{locale: 'en'}, {locale: 'es'}];
 }
 
+/**
+ * @desc lang support doc below
+ * @see https://next-intl-docs.vercel.app/docs/getting-started/app-router-client-components
+ */
+
 export default async function LocaleLayout({children, params: {locale}}) {
   let text;
   try {
