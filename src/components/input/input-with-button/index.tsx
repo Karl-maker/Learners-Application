@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 
 interface IProps {
     containerStyle?: object;
-    buttonText?: string;
     type?: string;
     placeholder?: string;
     value?: string | number;
@@ -15,9 +14,9 @@ interface IProps {
     onFocus?: Function;
     Icon?: ReactNode;
     inputStyle?: object;
-    LoadComponent?: ReactNode;
-    SuccessComponent?: ReactNode;
     isValid?: boolean;
+    state?: string;
+    ButtonComponent?: ReactNode;
 }
 
 /**
@@ -27,7 +26,6 @@ interface IProps {
 
 const InputWithButton = ({ 
     containerStyle = {}, 
-    buttonText = 'Submit',
     type = 'text',
     placeholder = 'Enter Here',
     value = "",
@@ -36,18 +34,17 @@ const InputWithButton = ({
     onChange = () => {},
     buttonStyle = {},
     inputStyle ={},
-    loading = false,
     onClick = () => {},
     onFocus = () => {},
     Icon = <></>,
-    LoadComponent = <></>,
     isValid = true,
-    SuccessComponent
+    ButtonComponent = <></>,
  }: IProps) => {
+
 
     return <div style={{
         borderRadius: '30px',
-        borderWidth: '0',
+        borderWidth: '1',
         display: 'flex',
         backgroundColor: "#ffff",
         width: '250px',
@@ -55,7 +52,8 @@ const InputWithButton = ({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        ...containerStyle
+        ...containerStyle,
+        borderColor: isValid ? containerStyle['borderColor'] ?? 'transparent' : 'red'
     }}>
 
         <>
@@ -93,11 +91,11 @@ const InputWithButton = ({
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                ...buttonStyle,
+                ...buttonStyle
             }}
             onClick={onClick}
         >
-            { !loading ? buttonText : LoadComponent }
+            {ButtonComponent}
         </button>
     </div>
 }

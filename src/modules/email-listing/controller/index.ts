@@ -8,7 +8,7 @@ import { Response } from "@/modules/interfaces"
 const addToEmailList = async (email: string = ''): Promise<Response> => {
     return new Promise((res, rej) => {
         setTimeout(()=> {
-            rej({
+            res({
                 message: "Added to email list",
             })
         }, 3000)

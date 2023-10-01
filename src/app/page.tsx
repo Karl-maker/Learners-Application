@@ -8,8 +8,10 @@ import useStateMachine from "@/hooks/useStateMachine";
 import useStateManager from "@/hooks/useStateManager";
 import emailListController from "@/modules/email-listing/controller";
 import { isValidEmail } from "@/utils/validation";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { Rings } from 'react-loader-spinner';
+import { AiFillCheckCircle } from 'react-icons/ai';
+import { HiOutlineMail } from 'react-icons/hi';
 
 interface IHomePage {
     email: string;
@@ -20,6 +22,8 @@ interface IHomePage {
     disableSubmit: boolean;
     loading: boolean;
     validEmail: boolean;
+    ButtonComponent: ReactNode;
+    Icon: ReactNode;
 }
 
 const homePageStateConfig  = {
@@ -65,59 +69,25 @@ const HomePageDesktopView = (props: IHomePage) => {
         onSubmit,
         disableInput,
         disableSubmit,
-        loading
+        ButtonComponent,
+        Icon
     } = props;
 
     const containerStyle = {
       display: 'flex',
-      //flexDirection: 'column',
-      alignItems: 'center', // Center items horizontally
-      justifyContent: 'center', // Center items vertically
-      height: '100vh', // 100% of the viewport height
-      backgroundColor: 'red'
-    };
-  
-    const formStyle = {
-      textAlign: 'center', // Center the form's content horizontally
-    };
-  
-    const formGroupStyle = {
-      margin: '10px 0',
-    };
-  
-    const labelStyle = {
-      fontWeight: 'bold',
-    };
-  
-    const inputStyle = {
-      width: '100%',
-      padding: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      fontSize: '16px',
-      borderColor: validEmail ? 'grey' : 'red'
-    };
-  
-    const buttonStyle = {
-      backgroundColor: '#007BFF',
-      color: '#fff',
-      padding: '10px 20px',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      fontSize: '16px',
-      transition: 'background-color 0.3s ease',
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      height: '100vh', 
+      paddingTop: '200px',
+      backgroundColor: 'grey'
     };
  
     return (
       <div style={containerStyle}>
         {/* Container For background */}
         <WidgetComponent.Widget>
-          <div style={formStyle}>
-              <div style={formGroupStyle} className="form-group">
-                <div style={labelStyle}>
-                  Enter In Your Email To Recieve More Info
-                </div>
+          <div>
+              <div>
                 <InputWithButton
                   type="email"
                   value={email}
@@ -128,42 +98,29 @@ const HomePageDesktopView = (props: IHomePage) => {
                   disableInput={disableInput}
                   disableButton={disableSubmit}
                   onClick={onSubmit}
-                  loading={loading}
                   onFocus={onFocus}
                   inputStyle={{
                     width: '100%',
-                    fontSize: '18px'
+                    fontSize: '19px'
                   }}
+                  isValid={validEmail}
                   buttonStyle={{
-                    width: '120px',
+                    width: '200px',
                     height: '60px',
                     fontSize: '20px',
                     transition: '0.5s',
+                    borderRadius: '20px',
                     backgroundColor: !validEmail ? 'grey' : '#16a085'
                   }}
                   containerStyle={{
                     height: '60px',
-                    width: '400px',
-                    borderRadius: '60px'
+                    width: '600px',
+                    borderRadius: '20px'
                   }}
-                  Icon={<>
-
-                  </>}
-                  SuccessComponent = {
-                    <></>
+                  ButtonComponent={
+                    ButtonComponent
                   }
-                  LoadComponent={
-                    <Rings
-                        height="70"
-                        width="70"
-                        color="#ffff"
-                        radius="6"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        visible={true}
-                        ariaLabel="rings-loading"
-                    />
-                  }
+                  Icon={Icon}
                  />
               </div>
           </div>
@@ -192,7 +149,7 @@ export default function Home() {
 
     const handleFormProcessing = async () => {
         try{
-            const { message } = await emailListController.addToEmailList(form.get().email);
+            await emailListController.addToEmailList(form.get().email);
             homePageState.transition('INFORMATION_SUBMITTED');
         } catch({ message }) {
             homePageState.transition('ERROR_OCCURED');
@@ -234,6 +191,25 @@ export default function Home() {
         })();
     }, [homePageState.state]);
 
+    const buttonDisplay = {
+        processing_form: <Rings
+            height="70"
+            width="70"
+            color="#ffff"
+            radius="6"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="rings-loading"
+        />,
+        form_complete: <AiFillCheckCircle
+            size={40}
+            color="white"
+        />,
+        filling_out_form: <>Submit</>,
+        idle: <>Submit</>
+    }
+
     const homeProps = {
         email: form.get().email,
         setEmail: handleEmailInput,
@@ -242,7 +218,17 @@ export default function Home() {
         onSubmit: handleSubmitEmail,
         disableInput: homePageState.state === 'processing_form' || homePageState.state === 'form_complete',
         disableSubmit: homePageState.state === 'processing_form' || homePageState.state === 'form_complete' || !form.get().isEmailValid,
-        loading: homePageState.state === 'processing_form'
+        loading: homePageState.state === 'processing_form',
+        ButtonComponent: buttonDisplay[homePageState.state],
+        Icon: <div style={{
+                marginLeft: '10px',
+                marginRight: '10px'
+              }}>
+                <HiOutlineMail 
+                    size={40}
+                    color='grey'
+                />
+            </div>
     }
 
     const HomeComponents = {
