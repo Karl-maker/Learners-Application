@@ -1,17 +1,17 @@
 import { ReactNode } from "react";
 
-interface IProps {
+interface IPropsInputWithButton {
     containerStyle?: object;
     type?: string;
     placeholder?: string;
     value?: string | number;
-    onChange?: Function;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     disableInput?: boolean;
     disableButton?: boolean;
     buttonStyle?: object;
     loading?: boolean;
-    onClick?: Function;
-    onFocus?: Function;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
     Icon?: ReactNode;
     inputStyle?: object;
     isValid?: boolean;
@@ -39,7 +39,7 @@ const InputWithButton = ({
     Icon = <></>,
     isValid = true,
     ButtonComponent = <></>,
- }: IProps) => {
+ }: IPropsInputWithButton) => {
 
 
     return <div style={{
@@ -55,14 +55,9 @@ const InputWithButton = ({
         ...containerStyle,
         borderColor: isValid ? containerStyle['borderColor'] ?? 'transparent' : 'red'
     }}>
-
         <>
-        {
-            // icon
-        }
-        {Icon && Icon}
+            {Icon && Icon}
         </>
-        
         <input 
             style={{
                 borderWidth: '0px',

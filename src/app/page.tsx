@@ -16,8 +16,8 @@ import { HiOutlineMail } from 'react-icons/hi';
 interface IHomePage {
     email: string;
     setEmail: Function;
-    onFocus: Function;
-    onSubmit: Function;
+    onFocus: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onSubmit: React.MouseEventHandler<HTMLButtonElement>;
     disableInput: boolean;
     disableSubmit: boolean;
     loading: boolean;
