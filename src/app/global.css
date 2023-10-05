@@ -26,6 +26,10 @@ body.light-mode .skeleton {
     background: #b2bec3;
 }
 
+.home-page-widget-right-panel {
+    background: #1dd1a1;
+}
+
 input:focus {
     outline:none; 
 }

@@ -82,73 +82,90 @@ const HomePageDesktopView = (props: IHomePage) => {
     } = props;
 
     const containerStyle = {
-      height: '100vh', 
-      backgroundColor: '#1dd1a1'
-    };
+        backgroundColor: '#10ac84',
+    };    
 
     const statusStyle = {
         color: '#ffff',
-        backgroundColor: "#10ac84",
+        backgroundColor: "#1dd1a1",
         display: 'inline-block',
         borderRadius: '16px',
         padding: '8px 16px',
         fontSize: '14px',
         fontWeight: 'bold',
     }
+
+    const headerStyle = {
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '60px',
+        marginTop: "4px",
+        color: "#ffff"
+    }
  
+    const leftStyle = {
+        height: '100%',
+        marginLeft: "20px",
+        display: 'flex',
+        justifyContent: 'center', // Center horizontally
+        alignItems: 'center',     // Center vertically
+    }
+
     return (
       <div style={containerStyle}>
         {/* Container For background */}
-        <SplitScreen>
+        <SplitScreen height="100vh" firstWeight={1} secondWeight={1}>
         <WidgetComponent.Widget>
-          <div>
-            <div style={statusStyle}>
-                {statusMessage}
-            </div>
-            <h1>
-                { headerMessage }
-            </h1>
+          <div style={leftStyle}>
+            <div>
+                <div style={statusStyle}>
+                    {statusMessage}
+                </div>
+                <h1 style={headerStyle}>
+                    { headerMessage }
+                </h1>
                 <InputWithButton
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  placeholder={placeholder}
-                  disableInput={disableInput}
-                  disableButton={disableSubmit}
-                  onClick={onSubmit}
-                  onFocus={onFocus}
-                  inputStyle={{
-                    width: '100%',
-                    fontSize: '19px'
-                  }}
-                  isValid={validEmail}
-                  buttonStyle={{
-                    width: '200px',
-                    height: '60px',
-                    fontSize: '20px',
-                    transition: '0.5s',
-                    borderRadius: '20px',
-                    backgroundColor: !validEmail ? 'grey' : '#16a085'
-                  }}
-                  containerStyle={{
-                    height: '60px',
-                    width: '500px',
-                    borderRadius: '20px'
-                  }}
-                  ButtonComponent={
-                    ButtonComponent
-                  }
-                  Icon={Icon}
-                 />
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                    }}
+                    placeholder={placeholder}
+                    disableInput={disableInput}
+                    disableButton={disableSubmit}
+                    onClick={onSubmit}
+                    onFocus={onFocus}
+                    inputStyle={{
+                        width: '100%',
+                        fontSize: '19px'
+                    }}
+                    isValid={validEmail}
+                    buttonStyle={{
+                        width: '200px',
+                        height: '60px',
+                        fontSize: '20px',
+                        transition: '0.5s',
+                        borderRadius: '20px',
+                        backgroundColor: !validEmail ? 'grey' : '#16a085'
+                    }}
+                    containerStyle={{
+                        height: '60px',
+                        width: '500px',
+                        borderRadius: '23px'
+                    }}
+                    ButtonComponent={
+                        ButtonComponent
+                    }
+                    Icon={Icon}
+                />
+            </div>
           </div>
         </WidgetComponent.Widget>
-        <div>
-            {
-                //@desc add relevant art 
-            }
-        </div>
+        <WidgetComponent.Widget
+            widgetClassName="home-page-widget-right-panel"
+            outerPadding="40px"
+            outerBorderRadius="50px"
+        >
+        </WidgetComponent.Widget>
         </SplitScreen>
       </div>
     );
